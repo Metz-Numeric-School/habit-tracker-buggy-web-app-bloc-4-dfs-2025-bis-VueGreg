@@ -31,8 +31,13 @@ class HabitLogRepository extends AbstractRepository
 
     public function insert(array $data = array())
     {
-        $sql = "INSERT INTO habit_logs (habit_id, log_date, status) VALUES (:habit_id, :log_date, :status)";
-        $query = $this->getConnection()->prepare($sql);
+        $query= $this->getConnection()->prepare("INSERT INTO habit_logs (habit_id, log_date, status) VALUES (:habit_id, :log_date, :status)");
+
+        $habit_id = $data["habit_id"];
+        $log_date = $data["log_date"];
+        $status = $data["status"];
+
+        $query->bind_param($habit_id,$log_date, $status);
         $query->execute($data);
         return $this->getConnection()->lastInsertId();
     }
