@@ -28,8 +28,15 @@ class UserRepository extends AbstractRepository
 
     public function insert(array $data = array())
     {
-        $sql = "INSERT INTO mns_user (lastname, firstname, email, password, isadmin) VALUES (:lastname, :firstname, :email, :password, :isadmin)";
-        $query = $this->getConnection()->prepare($sql);
+        $query= $this->getConnection()->prepare("INSERT INTO `mns_user` (lastname, firstname, email, password, isadmin) VALUES (?,?,?, ?, ?)");
+
+        $email = $data["email"];
+        $password = PASSWORD_HASH($_POST["password"], PASSWORD_DEFAULT);
+        $lastname = $data["lastname"];
+        $firsname = $data["firstname"];
+        $isAdmin = $data["isAdmin"];
+
+        $query->bind_param($lastname,$firsname, $email, $password, $isAdmin);
         $query->execute($data);
         return $this->getConnection()->lastInsertId();
     }
